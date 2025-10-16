@@ -19,24 +19,24 @@
     }
 
     .card {
-      background: #fff;
+      background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
       padding: 30px 20px;
       width: 90%;
-      max-width: 360px;
+      max-width: 380px;
       transition: all 0.3s ease;
     }
 
     h1 {
-      font-size: 20px;
+      font-size: 22px;
       margin-bottom: 20px;
       color: #444;
     }
 
     .word {
-      font-size: 26px;
-      margin: 20px 0;
+      font-size: 28px;
+      margin: 25px 0;
       font-weight: bold;
     }
 
@@ -47,12 +47,19 @@
       margin-bottom: 20px;
     }
 
+    #timer {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #777;
+      height: 22px;
+    }
+
     button {
       background: #ccc;
       color: #222;
       border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
+      border-radius: 10px;
+      padding: 12px 20px;
       font-size: 16px;
       cursor: pointer;
       width: 100%;
@@ -61,24 +68,33 @@
     }
 
     button:hover {
-      background: #bbb;
+      background: #bdbdbd;
     }
 
     button:active {
-      background: #999;
+      background: #9e9e9e;
     }
 
-    #timer {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #777;
+    .countdown {
+      font-size: 48px;
+      color: #666;
+      font-weight: bold;
+      margin: 20px 0;
     }
+
+    .test-mode {
+      color: #444;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
   </style>
 </head>
 <body>
 
   <div class="card">
     <h1>マナー単語学習</h1>
+    <div id="modeText" class="test-mode"></div>
     <div class="word" id="word">お辞儀</div>
     <div class="meaning" id="meaning">礼儀として頭を下げる行為</div>
     <div id="timer"></div>
@@ -102,30 +118,38 @@
     let index = 0;
     let testMode = false;
     let timerInterval;
+    let countdown = 3;
+
     const wordEl = document.getElementById("word");
     const meaningEl = document.getElementById("meaning");
     const showBtn = document.getElementById("showBtn");
     const nextBtn = document.getElementById("nextBtn");
     const testBtn = document.getElementById("testBtn");
     const timerEl = document.getElementById("timer");
+    const modeText = document.getElementById("modeText");
 
+    // 通常表示
     function showWord() {
       const current = words[index];
       wordEl.textContent = current.word;
       meaningEl.textContent = current.meaning;
       meaningEl.style.display = "none";
       timerEl.textContent = "";
+      modeText.textContent = "";
     }
 
+    // テストモード開始
     function startTest() {
       testMode = true;
       showBtn.style.display = "none";
       nextBtn.style.display = "none";
       testBtn.textContent = "テスト終了";
       index = 0;
+      modeText.textContent = "🧠 3秒以内に思い出してください";
       showNextTestWord();
     }
 
+    // テストモード終了
     function stopTest() {
       testMode = false;
       clearInterval(timerInterval);
@@ -133,25 +157,28 @@
       nextBtn.style.display = "block";
       testBtn.textContent = "テスト開始";
       timerEl.textContent = "";
+      modeText.textContent = "";
       showWord();
     }
 
+    // テストモードの単語表示＋カウントダウン
     function showNextTestWord() {
       if (!testMode) return;
       const current = words[index];
       wordEl.textContent = current.word;
       meaningEl.style.display = "none";
+      countdown = 3;
 
-      let countdown = 3;
-      timerEl.textContent = `残り: ${countdown}秒`;
+      timerEl.textContent = `残り ${countdown} 秒`;
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         countdown--;
         if (countdown > 0) {
-          timerEl.textContent = `残り: ${countdown}秒`;
+          timerEl.textContent = `残り ${countdown} 秒`;
         } else {
           clearInterval(timerInterval);
+          // 次の単語に進む
           index = (index + 1) % words.length;
           showNextTestWord();
         }
