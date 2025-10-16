@@ -13,7 +13,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      background: #f3f3f3;
+      background: #f2f2f2;
       color: #333;
       text-align: center;
     }
@@ -24,19 +24,19 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
       padding: 30px 20px;
       width: 90%;
-      max-width: 380px;
+      max-width: 360px;
       transition: all 0.3s ease;
     }
 
     h1 {
-      font-size: 22px;
+      font-size: 20px;
       margin-bottom: 20px;
       color: #444;
     }
 
     .word {
-      font-size: 28px;
-      margin: 25px 0;
+      font-size: 26px;
+      margin: 20px 0;
       font-weight: bold;
     }
 
@@ -47,19 +47,12 @@
       margin-bottom: 20px;
     }
 
-    #timer {
-      margin-top: 10px;
-      font-size: 18px;
-      color: #777;
-      height: 22px;
-    }
-
     button {
       background: #ccc;
       color: #222;
       border: none;
-      border-radius: 10px;
-      padding: 12px 20px;
+      border-radius: 8px;
+      padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
       width: 100%;
@@ -68,11 +61,17 @@
     }
 
     button:hover {
-      background: #bdbdbd;
+      background: #bbb;
     }
 
     button:active {
-      background: #9e9e9e;
+      background: #999;
+    }
+
+    #timer {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #777;
     }
   </style>
 </head>
@@ -89,11 +88,6 @@
     <button id="testBtn">テスト開始</button>
   </div>
 
-  <!-- 音声（短いビープ音） -->
-  <audio id="beep" preload="auto">
-    <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
-  </audio>
-
   <script>
     const words = [
       { word: "お辞儀", meaning: "礼儀として頭を下げる行為" },
@@ -103,34 +97,18 @@
       { word: "手土産", meaning: "訪問時に持参する小さな贈り物" },
       { word: "名刺交換", meaning: "初対面の際に名刺を交換するビジネスマナー" },
       { word: "時間厳守", meaning: "約束の時間を守ること" },
-      { word: "服装マナー", meaning: "場にふさわしい服装を選ぶ礼儀" },
-      { word: "会釈", meaning: "軽く頭を下げる礼" },
-      { word: "報連相", meaning: "報告・連絡・相談を徹底するビジネスマナー" }
     ];
 
-    let shuffledWords = [];
     let index = 0;
     let testMode = false;
     let timerInterval;
-    let countdown = 3;
-
     const wordEl = document.getElementById("word");
     const meaningEl = document.getElementById("meaning");
     const showBtn = document.getElementById("showBtn");
     const nextBtn = document.getElementById("nextBtn");
     const testBtn = document.getElementById("testBtn");
     const timerEl = document.getElementById("timer");
-    const beep = document.getElementById("beep");
 
-    // 配列をランダム化
-    function shuffle(array) {
-      return array
-        .map(v => ({ v, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ v }) => v);
-    }
-
-    // 通常モード
     function showWord() {
       const current = words[index];
       wordEl.textContent = current.word;
@@ -139,18 +117,15 @@
       timerEl.textContent = "";
     }
 
-    // テスト開始
     function startTest() {
       testMode = true;
-      shuffledWords = shuffle([...words]);
-      index = 0;
       showBtn.style.display = "none";
       nextBtn.style.display = "none";
       testBtn.textContent = "テスト終了";
+      index = 0;
       showNextTestWord();
     }
 
-    // テスト終了
     function stopTest() {
       testMode = false;
       clearInterval(timerInterval);
@@ -161,33 +136,28 @@
       showWord();
     }
 
-    // テスト1問処理
     function showNextTestWord() {
       if (!testMode) return;
-      const current = shuffledWords[index];
+      const current = words[index];
       wordEl.textContent = current.word;
       meaningEl.style.display = "none";
-      countdown = 3;
-      timerEl.textContent = `残り ${countdown} 秒`;
+
+      let countdown = 3;
+      timerEl.textContent = `残り: ${countdown}秒`;
 
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
-        // 音を1秒ごとに鳴らす
-        beep.currentTime = 0;
-        beep.play();
-
         countdown--;
         if (countdown > 0) {
-          timerEl.textContent = `残り ${countdown} 秒`;
+          timerEl.textContent = `残り: ${countdown}秒`;
         } else {
           clearInterval(timerInterval);
-          index = (index + 1) % shuffledWords.length;
+          index = (index + 1) % words.length;
           showNextTestWord();
         }
       }, 1000);
     }
 
-    // ボタン操作
     showBtn.addEventListener("click", () => {
       meaningEl.style.display = "block";
     });
@@ -198,11 +168,13 @@
     });
 
     testBtn.addEventListener("click", () => {
-      if (testMode) stopTest();
-      else startTest();
+      if (testMode) {
+        stopTest();
+      } else {
+        startTest();
+      }
     });
 
-    // 初期表示
     showWord();
   </script>
 </body>
