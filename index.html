@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マナー単語学習</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f4f7f9;
+      color: #333;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 360px;
+      transition: all 0.3s ease;
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .word {
+      font-size: 24px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .meaning {
+      font-size: 18px;
+      color: #555;
+      display: none;
+      margin-bottom: 20px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:active {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>マナー単語学習</h1>
+    <div class="word" id="word">お辞儀</div>
+    <div class="meaning" id="meaning">礼儀として頭を下げる行為</div>
+    <button id="showBtn">意味を表示</button>
+    <button id="nextBtn">次の単語へ</button>
+  </div>
+
+  <script>
+    const words = [
+      { word: "お辞儀", meaning: "礼儀として頭を下げる行為" },
+      { word: "敬語", meaning: "相手への敬意を表す丁寧な言葉遣い" },
+      { word: "挨拶", meaning: "出会いや別れの際に交わす礼儀的な言葉" },
+      { word: "席次", meaning: "座席や席順の上下関係" },
+      { word: "手土産", meaning: "訪問時に持参する小さな贈り物" },
+      { word: "名刺交換", meaning: "初対面の際に名刺を交換するビジネスマナー" },
+      { word: "時間厳守", meaning: "約束の時間を守ること" },
+    ];
+
+    let index = 0;
+    const wordEl = document.getElementById("word");
+    const meaningEl = document.getElementById("meaning");
+    const showBtn = document.getElementById("showBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function showWord() {
+      const current = words[index];
+      wordEl.textContent = current.word;
+      meaningEl.textContent = current.meaning;
+      meaningEl.style.display = "none";
+    }
+
+    showBtn.addEventListener("click", () => {
+      meaningEl.style.display = "block";
+    });
+
+    nextBtn.addEventListener("click", () => {
+      index = (index + 1) % words.length;
+      showWord();
+    });
+
+    showWord();
+  </script>
+</body>
+</html>
